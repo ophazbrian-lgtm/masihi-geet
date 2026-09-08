@@ -3,9 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Masihi Geet — Pakistani Christian Songs</title>
-
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: Arial, Helvetica, sans-serif; background: #f7f7f7; color: #171717; line-height: 1.6; }
@@ -27,22 +25,34 @@
     .song-card .artist { color: #666; margin-bottom: 12px; }
     .song-meta { display: flex; gap: 8px; flex-wrap: wrap; }
     .tag { background: #eee; border-radius: 20px; padding: 4px 10px; font-size: 12px; }
-    .song-view { display: none; background: white; min-height: 70vh; padding: 30px 20px; }
+    .song-view { display: none; background: white; min-height: 70vh; padding: 30px 20px 80px; }
     .song-view-inner { max-width: 800px; margin: auto; }
     .back-button { border: none; background: #eee; padding: 10px 16px; border-radius: 8px; cursor: pointer; margin-bottom: 25px; font-size: 14px; }
-    .song-header { margin-bottom: 30px; }
+    .song-header { margin-bottom: 25px; }
     .song-header h2 { font-size: 34px; margin-bottom: 5px; }
     .song-header p { color: #666; }
-    .controls { display: flex; gap: 10px; align-items: center; margin-bottom: 30px; flex-wrap: wrap; }
-    .controls button { border: none; background: #111; color: white; padding: 10px 15px; border-radius: 7px; cursor: pointer; font-size: 15px; }
+    .controls { position: sticky; top: 0; z-index: 10; display: flex; gap: 10px; align-items: center; margin: 0 -20px 30px; padding: 12px 20px; background: rgba(255,255,255,0.96); border-bottom: 1px solid #ddd; flex-wrap: wrap; }
+    .controls button { border: none; background: #111; color: white; min-width: 44px; min-height: 42px; padding: 10px 15px; border-radius: 7px; cursor: pointer; font-size: 16px; }
     .controls button:hover { opacity: 0.85; }
-    .key-display { background: #eee; padding: 10px 15px; border-radius: 7px; font-weight: bold; }
-    .lyrics { font-size: 19px; }
-    .lyric-line { margin-bottom: 18px; }
-    .chord { color: #c62828; font-weight: bold; margin-right: 8px; }
+    .key-display { background: #eee; padding: 10px 15px; border-radius: 7px; font-weight: bold; min-height: 42px; display: flex; align-items: center; }
+    .lyrics { font-size: 20px; line-height: 1.75; }
+    .lyric-line { margin-bottom: 20px; }
+    .lyric-line.section { margin-top: 32px; margin-bottom: 12px; font-weight: bold; font-size: 15px; text-transform: uppercase; letter-spacing: 0.08em; color: #666; }
+    .chord { display: inline-block; color: #c62828; font-weight: bold; margin-right: 10px; min-width: 28px; }
     .empty-message { text-align: center; padding: 50px 20px; color: #777; }
     footer { background: #111; color: #aaa; text-align: center; padding: 30px 20px; margin-top: 50px; font-size: 14px; }
-    @media (max-width: 600px) { .hero h2 { font-size: 32px; } .song-header h2 { font-size: 28px; } .lyrics { font-size: 17px; } }
+    @media (max-width: 600px) {
+      .hero { padding: 45px 16px; }
+      .hero h2 { font-size: 32px; }
+      main { padding: 30px 16px; }
+      .song-view { padding: 20px 16px 70px; }
+      .song-header h2 { font-size: 28px; }
+      .controls { margin-left: -16px; margin-right: -16px; padding-left: 16px; padding-right: 16px; gap: 8px; }
+      .controls button { min-width: 46px; }
+      .key-display { flex: 1; justify-content: center; }
+      .lyrics { font-size: 18px; line-height: 1.8; }
+      .lyric-line { margin-bottom: 18px; }
+    }
   </style>
 </head>
 <body>
@@ -72,9 +82,9 @@
         <p id="songArtist"></p>
       </div>
       <div class="controls">
-        <button onclick="transpose(-1)">−</button>
+        <button onclick="transpose(-1)" aria-label="Transpose down">−</button>
         <div class="key-display">Key: <span id="currentKey"></span></div>
-        <button onclick="transpose(1)">+</button>
+        <button onclick="transpose(1)" aria-label="Transpose up">+</button>
         <button onclick="resetTranspose()">Reset</button>
       </div>
       <div id="lyrics" class="lyrics"></div>
@@ -90,30 +100,19 @@
   <script>
     let currentSong = null;
     let transposeAmount = 0;
-
     const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
     function renderSongs(list = songs) {
       const grid = document.getElementById("songsGrid");
       grid.innerHTML = "";
-
       if (list.length === 0) {
         grid.innerHTML = `<div class="empty-message">No songs found.</div>`;
         return;
       }
-
       list.forEach(song => {
         const card = document.createElement("div");
         card.className = "song-card";
-        card.innerHTML = `
-          <h3>${song.title}</h3>
-          <div class="artist">${song.artist}</div>
-          <div class="song-meta">
-            <span class="tag">${song.language}</span>
-            <span class="tag">Key: ${song.key}</span>
-            <span class="tag">${song.category}</span>
-          </div>
-        `;
+        card.innerHTML = `<h3>${song.title}</h3><div class="artist">${song.artist}</div><div class="song-meta"><span class="tag">${song.language}</span><span class="tag">Key: ${song.key}</span><span class="tag">${song.category}</span></div>`;
         card.onclick = () => openSong(song);
         grid.appendChild(card);
       });
@@ -121,27 +120,11 @@
 
     function searchSongs() {
       const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
-
-      if (!searchTerm) {
-        renderSongs(songs);
-        return;
-      }
-
+      if (!searchTerm) { renderSongs(songs); return; }
       const filteredSongs = songs.filter(song => {
-        const lyricsText = (song.lyrics || [])
-          .map(line => typeof line === "string" ? line : (line.text || ""))
-          .join(" ")
-          .toLowerCase();
-
-        return (
-          (song.title || "").toLowerCase().includes(searchTerm) ||
-          (song.artist || "").toLowerCase().includes(searchTerm) ||
-          (song.language || "").toLowerCase().includes(searchTerm) ||
-          (song.category || "").toLowerCase().includes(searchTerm) ||
-          lyricsText.includes(searchTerm)
-        );
+        const lyricsText = (song.lyrics || []).map(line => typeof line === "string" ? line : (line.text || "")).join(" ").toLowerCase();
+        return (song.title || "").toLowerCase().includes(searchTerm) || (song.artist || "").toLowerCase().includes(searchTerm) || (song.language || "").toLowerCase().includes(searchTerm) || (song.category || "").toLowerCase().includes(searchTerm) || lyricsText.includes(searchTerm);
       });
-
       renderSongs(filteredSongs);
     }
 
@@ -155,26 +138,25 @@
       document.getElementById("songArtist").textContent = song.artist;
       document.getElementById("currentKey").textContent = song.key;
       renderLyrics();
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     function renderLyrics() {
       const lyricsContainer = document.getElementById("lyrics");
       lyricsContainer.innerHTML = "";
-
       if (!currentSong || !currentSong.lyrics) {
         lyricsContainer.innerHTML = `<div class="empty-message">Lyrics coming soon.</div>`;
         return;
       }
-
       currentSong.lyrics.forEach(line => {
         const lyricLine = document.createElement("div");
-        lyricLine.className = "lyric-line";
         const text = typeof line === "string" ? line : (line.text || "");
         const chord = typeof line === "string" ? "" : transposeChord(line.chord);
-        lyricLine.innerHTML = `<span class="chord">${chord}</span><span>${text}</span>`;
+        lyricLine.className = "lyric-line";
+        if (!text.trim() && !chord) lyricLine.innerHTML = "&nbsp;";
+        else lyricLine.innerHTML = `<span class="chord">${chord}</span><span>${text}</span>`;
         lyricsContainer.appendChild(lyricLine);
       });
-
       updateKeyDisplay();
     }
 
@@ -182,36 +164,22 @@
       if (!chord) return chord;
       const match = chord.match(/^(C#|D#|F#|G#|A#|C|D|E|F|G|A|B)(.*)$/);
       if (!match) return chord;
-
       const root = match[1];
       const suffix = match[2];
       const index = notes.indexOf(root);
       if (index === -1) return chord;
-
       let newIndex = (index + transposeAmount) % 12;
       if (newIndex < 0) newIndex += 12;
       return notes[newIndex] + suffix;
     }
 
-    function transpose(amount) {
-      transposeAmount += amount;
-      renderLyrics();
-    }
-
-    function resetTranspose() {
-      transposeAmount = 0;
-      renderLyrics();
-    }
+    function transpose(amount) { transposeAmount += amount; renderLyrics(); }
+    function resetTranspose() { transposeAmount = 0; renderLyrics(); }
 
     function updateKeyDisplay() {
       if (!currentSong) return;
       const originalIndex = notes.indexOf(currentSong.key);
-
-      if (originalIndex === -1) {
-        document.getElementById("currentKey").textContent = currentSong.key;
-        return;
-      }
-
+      if (originalIndex === -1) { document.getElementById("currentKey").textContent = currentSong.key; return; }
       let newIndex = (originalIndex + transposeAmount) % 12;
       if (newIndex < 0) newIndex += 12;
       document.getElementById("currentKey").textContent = notes[newIndex];
@@ -225,6 +193,7 @@
       document.getElementById("homeHero").style.display = "block";
       document.getElementById("searchInput").value = "";
       renderSongs(songs);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     renderSongs(songs);
