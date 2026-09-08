@@ -1,245 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Masihi Geet — Song Dashboard</title>
-  <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #f5f5f5; color: #171717; }
-    header { background: #111; color: white; padding: 18px 22px; display: flex; justify-content: space-between; align-items: center; gap: 15px; }
-    header h1 { margin: 0; font-size: 22px; }
-    header a { color: white; text-decoration: none; background: #333; padding: 9px 13px; border-radius: 7px; font-size: 14px; }
-    main { max-width: 1200px; margin: auto; padding: 25px 18px 60px; }
-    .topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
-    .topbar h2 { margin: 0; }
-    button { border: 0; border-radius: 8px; padding: 10px 14px; cursor: pointer; font-weight: 600; }
-    .primary { background: #111; color: white; }
-    .secondary { background: #e9e9e9; }
-    .danger { background: #ffe1e1; color: #a40000; }
-    .layout { display: grid; grid-template-columns: 280px 1fr; gap: 18px; }
-    .panel { background: white; border: 1px solid #ddd; border-radius: 12px; padding: 18px; }
-    .song-list { display: grid; gap: 8px; margin-top: 12px; }
-    .song-item { text-align: left; background: #f4f4f4; padding: 12px; border-radius: 8px; cursor: pointer; }
-    .song-item.active { background: #111; color: white; }
-    .song-item small { display: block; opacity: .65; margin-top: 3px; }
-    label { display: block; font-size: 13px; font-weight: 700; margin: 0 0 6px; }
-    input, select, textarea { width: 100%; border: 1px solid #ccc; border-radius: 8px; padding: 10px; font: inherit; }
-    textarea { min-height: 90px; resize: vertical; }
-    .fields { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-    .field.full { grid-column: 1 / -1; }
-    .lyrics-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: 22px 0 10px; }
-    .line-editor { border: 1px solid #ddd; border-radius: 10px; padding: 12px; margin-bottom: 10px; background: #fafafa; }
-    .line-tools { display: flex; justify-content: space-between; gap: 8px; align-items: center; margin-bottom: 8px; }
-    .line-number { font-weight: 700; color: #666; }
-    .chord-editor { margin-top: 10px; }
-    .chord-row { display: grid; grid-template-columns: 100px 100px 1fr; gap: 8px; margin-top: 7px; align-items: center; }
-    .chord-preview { margin-top: 8px; padding: 12px; border-radius: 8px; background: white; border: 1px dashed #bbb; font-family: "Courier New", monospace; white-space: pre; overflow-x: auto; }
-    .chord-preview .ch { color: #c62828; font-weight: 700; }
-    .hint { color: #666; font-size: 12px; line-height: 1.5; }
-    .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
-    .notice { padding: 12px; background: #fff7d6; border: 1px solid #ead98b; border-radius: 8px; font-size: 13px; margin-bottom: 18px; }
-    @media (max-width: 800px) { .layout { grid-template-columns: 1fr; } .fields { grid-template-columns: 1fr; } .field.full { grid-column: auto; } }
-    @media (max-width: 520px) { .chord-row { grid-template-columns: 80px 80px 1fr; } main { padding: 18px 12px 50px; } }
-  </style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Masihi Geet — Song Dashboard</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f5f5;color:#171717}header{background:#111;color:#fff;padding:18px 22px;display:flex;justify-content:space-between;align-items:center}header h1{margin:0;font-size:22px}header a{color:#fff;text-decoration:none;background:#333;padding:9px 13px;border-radius:7px;font-size:14px}main{max-width:1200px;margin:auto;padding:25px 18px 60px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}button{border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:600;background:#111;color:#fff}.secondary{background:#e9e9e9;color:#111}.danger{background:#ffe1e1;color:#a40000}.notice{padding:12px;background:#fff7d6;border:1px solid #ead98b;border-radius:8px;font-size:13px;margin-bottom:18px}.layout{display:grid;grid-template-columns:280px 1fr;gap:18px}.panel{background:#fff;border:1px solid #ddd;border-radius:12px;padding:18px}.song-list{display:grid;gap:8px;margin-top:12px}.song-item{text-align:left;background:#f4f4f4;color:#111;padding:12px;border-radius:8px;cursor:pointer;width:100%}.song-item.active{background:#111;color:#fff}label{display:block;font-size:13px;font-weight:700;margin:0 0 6px}input,select,textarea{width:100%;border:1px solid #ccc;border-radius:8px;padding:10px;font:inherit}textarea{min-height:75px;resize:vertical}.fields{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.full{grid-column:1/-1}.lyrics-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:22px 0 10px}.line-editor{border:1px solid #ddd;border-radius:10px;padding:12px;margin-bottom:12px;background:#fafafa}.line-tools{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.hint{color:#666;font-size:12px;line-height:1.5}.placement-wrap{margin-top:10px}.placement{position:relative;display:block;min-width:100%;padding:35px 12px 12px;border:1px solid #bbb;border-radius:8px;background:#fff;font:18px/1.7 "Courier New",monospace;white-space:pre;cursor:crosshair;overflow-x:auto;min-height:76px}.placement .chord{position:absolute;top:5px;color:#c62828;font-weight:700;cursor:grab;padding:1px 3px;border-radius:4px;user-select:none}.chord-list{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}.pill{background:#eee;border-radius:20px;padding:5px 9px;font-size:12px}.pill strong{color:#c62828}.preview{background:#111;color:#fff;border-radius:10px;padding:18px;overflow-x:auto;margin-top:10px}.preview-line{position:relative;font:18px/1.8 "Courier New",monospace;white-space:pre;padding-top:25px;margin-bottom:12px}.preview-chord{position:absolute;top:0;color:#ff7777;font-weight:700}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.empty{text-align:center;color:#777;padding:20px}@media(max-width:800px){.layout{grid-template-columns:1fr}.fields{grid-template-columns:1fr}.full{grid-column:auto}}
+</style>
 </head>
 <body>
-  <header>
-    <h1>Masihi Geet — Song Dashboard</h1>
-    <a href="index.html">← View site</a>
-  </header>
-
-  <main>
-    <div class="topbar">
-      <h2>Manage Songs</h2>
-      <button class="primary" onclick="newSong()">+ Add Song</button>
-    </div>
-
-    <div class="notice">
-      <strong>How this works:</strong> edit songs here, preview chord positions instantly, then download the updated <code>songs.js</code>. This dashboard is intentionally simple and does not put a GitHub password/token inside the website.
-    </div>
-
-    <div class="layout">
-      <aside class="panel">
-        <input id="songFilter" placeholder="Search songs..." oninput="renderSongList()">
-        <div id="songList" class="song-list"></div>
-      </aside>
-
-      <section class="panel">
-        <div id="editor"></div>
-      </section>
-    </div>
-  </main>
-
-  <script src="songs.js"></script>
-  <script>
-    let workingSongs = JSON.parse(JSON.stringify(songs || []));
-    let selectedIndex = workingSongs.length ? 0 : -1;
-
-    function slugify(value) {
-      return value.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'new-song';
-    }
-
-    function normalizeSong(song) {
-      song.lyrics = (song.lyrics || []).map(line => {
-        if (typeof line === 'string') return { text: line, chords: [] };
-        if (Array.isArray(line.chords)) return { text: line.text || '', chords: line.chords.map(c => ({ chord: c.chord || '', position: Number(c.position) || 0 })) };
-        if (line.chord) return { text: line.text || '', chords: [{ chord: line.chord, position: 0 }] };
-        return { text: line.text || '', chords: [] };
-      });
-      return song;
-    }
-
-    workingSongs = workingSongs.map(normalizeSong);
-
-    function renderSongList() {
-      const filter = document.getElementById('songFilter').value.toLowerCase().trim();
-      const list = document.getElementById('songList');
-      list.innerHTML = '';
-      workingSongs.forEach((song, index) => {
-        if (filter && !(`${song.title} ${song.artist}`.toLowerCase().includes(filter))) return;
-        const item = document.createElement('button');
-        item.className = 'song-item' + (index === selectedIndex ? ' active' : '');
-        item.innerHTML = `<strong>${escapeHtml(song.title || 'Untitled')}</strong><small>${escapeHtml(song.artist || '')}</small>`;
-        item.onclick = () => { selectedIndex = index; renderSongList(); renderEditor(); };
-        list.appendChild(item);
-      });
-    }
-
-    function escapeHtml(value) {
-      return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
-    }
-
-    function renderEditor() {
-      const editor = document.getElementById('editor');
-      if (selectedIndex < 0) { editor.innerHTML = '<p>No song selected.</p>'; return; }
-      const song = workingSongs[selectedIndex];
-      editor.innerHTML = `
-        <div class="fields">
-          <div class="field"><label>Song title</label><input id="title" value="${escapeHtml(song.title)}"></div>
-          <div class="field"><label>Artist</label><input id="artist" value="${escapeHtml(song.artist)}"></div>
-          <div class="field"><label>Language</label><input id="language" value="${escapeHtml(song.language)}"></div>
-          <div class="field"><label>Category</label><input id="category" value="${escapeHtml(song.category)}"></div>
-          <div class="field"><label>Original key</label><input id="key" value="${escapeHtml(song.key)}" maxlength="3"></div>
-          <div class="field"><label>Source URL</label><input id="sourceUrl" value="${escapeHtml(song.sourceUrl || '')}"></div>
-          <div class="field full"><label>Rights status</label><input id="rightsStatus" value="${escapeHtml(song.rightsStatus || '')}"></div>
-        </div>
-        <div class="lyrics-head"><div><h3 style="margin:0">Lyrics & chords</h3><div class="hint">Put each chord exactly where it changes. Position 0 means above the first character. Position 5 means above the 6th character.</div></div><button class="secondary" onclick="addLine()">+ Add line</button></div>
-        <div id="lines"></div>
-        <div class="actions">
-          <button class="primary" onclick="saveCurrentSong()">Save song</button>
-          <button class="secondary" onclick="downloadSongsJs()">Download songs.js</button>
-          <button class="secondary" onclick="downloadJson()">Backup JSON</button>
-          <button class="danger" onclick="deleteSong()">Delete song</button>
-        </div>
-      `;
-      renderLines();
-    }
-
-    function readMeta() {
-      const song = workingSongs[selectedIndex];
-      song.title = document.getElementById('title').value;
-      song.artist = document.getElementById('artist').value;
-      song.language = document.getElementById('language').value;
-      song.category = document.getElementById('category').value;
-      song.key = document.getElementById('key').value.trim();
-      song.sourceUrl = document.getElementById('sourceUrl').value.trim();
-      song.rightsStatus = document.getElementById('rightsStatus').value.trim();
-      if (!song.id || song.id === 'new-song') song.id = slugify(song.title);
-    }
-
-    function renderLines() {
-      const container = document.getElementById('lines');
-      if (!container) return;
-      const song = workingSongs[selectedIndex];
-      container.innerHTML = '';
-      song.lyrics.forEach((line, lineIndex) => {
-        const row = document.createElement('div');
-        row.className = 'line-editor';
-        row.innerHTML = `
-          <div class="line-tools"><span class="line-number">Line ${lineIndex + 1}</span><button class="danger" onclick="removeLine(${lineIndex})">Remove</button></div>
-          <textarea data-text="${lineIndex}" placeholder="Lyrics line...">${escapeHtml(line.text)}</textarea>
-          <div class="chord-editor">
-            <strong>Chords on this line</strong>
-            <div class="hint">Position is a character number. Example: 0 = before “Yesu”; 5 = above the 6th character.</div>
-            <div id="chords-${lineIndex}"></div>
-            <button class="secondary" style="margin-top:8px" onclick="addChord(${lineIndex})">+ Add chord</button>
-            <div class="chord-preview" id="preview-${lineIndex}"></div>
-          </div>
-        `;
-        container.appendChild(row);
-        const chordBox = row.querySelector(`#chords-${lineIndex}`);
-        (line.chords || []).forEach((chord, chordIndex) => {
-          const chordRow = document.createElement('div');
-          chordRow.className = 'chord-row';
-          chordRow.innerHTML = `<input value="${escapeHtml(chord.chord)}" placeholder="Chord" onchange="updateChord(${lineIndex},${chordIndex},'chord',this.value)"><input type="number" min="0" value="${Number(chord.position) || 0}" onchange="updateChord(${lineIndex},${chordIndex},'position',this.value)"><button class="danger" onclick="removeChord(${lineIndex},${chordIndex})">Remove</button>`;
-          chordBox.appendChild(chordRow);
-        });
-        updatePreview(lineIndex);
-        row.querySelector('textarea').addEventListener('input', e => { line.text = e.target.value; updatePreview(lineIndex); });
-      });
-    }
-
-    function addLine() { readMeta(); workingSongs[selectedIndex].lyrics.push({ text: '', chords: [] }); renderLines(); }
-    function removeLine(index) { workingSongs[selectedIndex].lyrics.splice(index, 1); renderLines(); }
-    function addChord(lineIndex) { workingSongs[selectedIndex].lyrics[lineIndex].chords.push({ chord: 'G', position: 0 }); renderLines(); }
-    function removeChord(lineIndex, chordIndex) { workingSongs[selectedIndex].lyrics[lineIndex].chords.splice(chordIndex, 1); renderLines(); }
-    function updateChord(lineIndex, chordIndex, field, value) { const c = workingSongs[selectedIndex].lyrics[lineIndex].chords[chordIndex]; c[field] = field === 'position' ? Math.max(0, parseInt(value || 0, 10)) : value; updatePreview(lineIndex); }
-
-    function updatePreview(lineIndex) {
-      const line = workingSongs[selectedIndex].lyrics[lineIndex];
-      const preview = document.getElementById(`preview-${lineIndex}`);
-      if (!preview) return;
-      const width = Math.max(line.text.length, 1);
-      const slots = Array(width).fill(' ');
-      const chords = [...(line.chords || [])].sort((a,b) => a.position - b.position);
-      chords.forEach(c => {
-        const pos = Math.min(Math.max(Number(c.position) || 0, 0), width);
-        const value = c.chord || '';
-        for (let i = 0; i < value.length && pos + i < slots.length; i++) slots[pos + i] = value[i];
-      });
-      preview.innerHTML = `<span class="ch">${escapeHtml(slots.join(''))}</span>\n${escapeHtml(line.text || ' ')}\n\nClick “Save song” after adjusting positions.`;
-    }
-
-    function saveCurrentSong() {
-      readMeta();
-      workingSongs[selectedIndex].lyrics = workingSongs[selectedIndex].lyrics.map(line => ({ text: line.text || '', chords: (line.chords || []).filter(c => c.chord).map(c => ({ chord: c.chord.trim(), position: Math.max(0, Number(c.position) || 0) })) }));
-      renderSongList();
-      renderEditor();
-      alert('Song saved in this dashboard. Download songs.js when you are ready to publish it.');
-    }
-
-    function newSong() {
-      workingSongs.push({ id: 'new-song', title: 'New Song', artist: '', language: 'Urdu', category: 'Worship', key: 'G', rightsStatus: 'demo', sourceUrl: '', lyrics: [{ text: '', chords: [] }] });
-      selectedIndex = workingSongs.length - 1;
-      renderSongList(); renderEditor();
-    }
-
-    function deleteSong() {
-      if (!confirm('Delete this song from the dashboard?')) return;
-      workingSongs.splice(selectedIndex, 1);
-      selectedIndex = Math.min(selectedIndex, workingSongs.length - 1);
-      renderSongList(); renderEditor();
-    }
-
-    function prepareExport() {
-      readMeta();
-      workingSongs[selectedIndex].lyrics = workingSongs[selectedIndex].lyrics.map(line => ({ text: line.text || '', chords: (line.chords || []).filter(c => c.chord).map(c => ({ chord: c.chord.trim(), position: Math.max(0, Number(c.position) || 0) })) }));
-      return `const songs = ${JSON.stringify(workingSongs, null, 2)};\n`;
-    }
-
-    function downloadFile(filename, content, type) {
-      const blob = new Blob([content], { type });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = filename; a.click();
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
-    }
-
-    function downloadSongsJs() { downloadFile('songs.js', prepareExport(), 'text/javascript'); }
-    function downloadJson() { downloadFile('masihi-geet-backup.json', JSON.stringify(workingSongs, null, 2), 'application/json'); }
-
-    renderSongList();
-    if (selectedIndex >= 0) renderEditor();
-  </script>
+<header><h1>Masihi Geet — Song Dashboard</h1><a href="index.html">← View site</a></header>
+<main>
+<div class="topbar"><h2>Manage Songs</h2><button onclick="newSong()">+ Add Song</button></div>
+<div class="notice"><strong>Chord editor:</strong> type a lyric line, then click exactly where the chord should change. A chord is added at that position. Drag a chord left or right to fine-tune it. Multiple chords per line are supported.</div>
+<div class="layout"><aside class="panel"><input id="filter" placeholder="Search songs..." oninput="renderList()"><div id="list" class="song-list"></div></aside><section class="panel"><div id="editor"></div></section></div>
+</main>
+<script src="songs.js"></script>
+<script>
+let data=JSON.parse(JSON.stringify(songs||[])).map(normalizeSong),selected=data.length?0:-1;
+function normalizeSong(s){s.lyrics=(s.lyrics||[]).map(l=>typeof l==='string'?{text:l,chords:[]}:{text:l.text||'',chords:Array.isArray(l.chords)?l.chords.map(c=>({chord:c.chord||'',position:Number(c.position)||0})):l.chord?[{chord:l.chord,position:0}]:[]});return s}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+function renderList(){let q=document.getElementById('filter').value.toLowerCase(),box=document.getElementById('list');box.innerHTML='';data.forEach((s,i)=>{if(q&&!(`${s.title} ${s.artist}`.toLowerCase().includes(q)))return;let b=document.createElement('button');b.className='song-item '+(i===selected?'active':'');b.innerHTML=`<strong>${esc(s.title||'Untitled')}</strong><small>${esc(s.artist||'')}</small>`;b.onclick=()=>{selected=i;renderList();renderEditor()};box.appendChild(b)})}
+function renderEditor(){let box=document.getElementById('editor');if(selected<0){box.innerHTML='<div class="empty">No song selected.</div>';return}let s=data[selected];box.innerHTML=`<div class="fields"><div><label>Song title</label><input id="title" value="${esc(s.title)}"></div><div><label>Artist</label><input id="artist" value="${esc(s.artist)}"></div><div><label>Language</label><input id="language" value="${esc(s.language)}"></div><div><label>Category</label><input id="category" value="${esc(s.category)}"></div><div><label>Original key</label><input id="key" value="${esc(s.key)}"></div><div><label>Rights status</label><input id="rights" value="${esc(s.rightsStatus||'demo')}"></div><div class="full"><label>Source URL</label><input id="source" value="${esc(s.sourceUrl||'')}"></div></div><div class="lyrics-head"><div><h3 style="margin:0">Lyrics & chords</h3><div class="hint">Click directly on the lyric at the exact point where the chord changes.</div></div><button class="secondary" onclick="addLine()">+ Add line</button></div><div id="lines"></div><div class="actions"><button onclick="saveSong()">Save song</button><button class="secondary" onclick="downloadSongs()">Download songs.js</button><button class="secondary" onclick="downloadBackup()">Backup JSON</button><button class="danger" onclick="deleteSong()">Delete song</button></div><div style="margin-top:22px"><h3>Live preview</h3><div id="preview" class="preview"></div></div>`;renderLines();renderPreview()}
+function meta(){let s=data[selected];s.title=document.getElementById('title').value;s.artist=document.getElementById('artist').value;s.language=document.getElementById('language').value;s.category=document.getElementById('category').value;s.key=document.getElementById('key').value.trim();s.rightsStatus=document.getElementById('rights').value.trim();s.sourceUrl=document.getElementById('source').value.trim()}
+function renderLines(){let box=document.getElementById('lines');box.innerHTML='';data[selected].lyrics.forEach((l,i)=>{let d=document.createElement('div');d.className='line-editor';d.innerHTML=`<div class="line-tools"><strong>Line ${i+1}</strong><button class="danger" onclick="removeLine(${i})">Remove</button></div><textarea id="text-${i}" placeholder="Type lyric line...">${esc(l.text)}</textarea><div class="placement-wrap"><div class="hint">Click the character where the chord should start. You will be asked for the chord name.</div><div id="place-${i}" class="placement"></div><div id="chordlist-${i}" class="chord-list"></div></div>`;box.appendChild(d);document.getElementById(`text-${i}`).addEventListener('input',e=>{l.text=e.target.value;drawPlacement(i);renderPreview()});drawPlacement(i)})}
+function charPosition(area,e,text){let r=area.getBoundingClientRect(),style=getComputedStyle(area),font=parseFloat(style.fontSize)||18,charWidth=font*0.602,x=e.clientX-r.left-12+area.scrollLeft;return Math.max(0,Math.min(text.length,Math.round(x/charWidth)))}
+function drawPlacement(i){let area=document.getElementById(`place-${i}`),l=data[selected].lyrics[i];if(!area)return;area.innerHTML='';let text=document.createElement('span');text.textContent=l.text||' ';area.appendChild(text);(l.chords||[]).sort((a,b)=>a.position-b.position);l.chords.forEach((c,j)=>{let s=document.createElement('span');s.className='chord';s.textContent=c.chord;s.style.left=`calc(12px + ${c.position}ch)`;s.title='Drag to move';s.onmousedown=e=>dragChord(e,i,j);area.appendChild(s)});area.onclick=e=>{if(e.target.classList.contains('chord'))return;let pos=charPosition(area,e,l.text||'');let chord=prompt('Enter chord for this position:', 'G');if(!chord)return;l.chords.push({chord:chord.trim(),position:pos});l.chords.sort((a,b)=>a.position-b.position);drawPlacement(i);renderPreview()};let list=document.getElementById(`chordlist-${i}`);list.innerHTML=l.chords.map((c,j)=>`<span class="pill"><strong>${esc(c.chord)}</strong> @ character ${c.position} <button style="padding:2px 6px;background:#ccc;color:#111;border-radius:50%" onclick="removeChord(${i},${j})">×</button></span>`).join('')}
+function dragChord(e,i,j){e.preventDefault();let startX=e.clientX,start=data[selected].lyrics[i].chords[j].position,area=e.currentTarget.parentElement,l=data[selected].lyrics[i],font=parseFloat(getComputedStyle(area).fontSize)||18,w=font*0.602;function move(ev){l.chords[j].position=Math.max(0,Math.min(l.text.length,start+Math.round((ev.clientX-startX)/w)));l.chords.sort((a,b)=>a.position-b.position);drawPlacement(i);renderPreview()}function up(){document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up)}document.addEventListener('mousemove',move);document.addEventListener('mouseup',up)}
+function removeChord(i,j){data[selected].lyrics[i].chords.splice(j,1);drawPlacement(i);renderPreview()}
+function addLine(){data[selected].lyrics.push({text:'',chords:[]});renderLines();renderPreview()}
+function removeLine(i){data[selected].lyrics.splice(i,1);renderLines();renderPreview()}
+function renderPreview(){let box=document.getElementById('preview');if(!box)return;box.innerHTML='';data[selected].lyrics.forEach(l=>{let row=document.createElement('div');row.className='preview-line';let text=document.createElement('div');text.textContent=l.text||' ';row.appendChild(text);l.chords.forEach(c=>{let s=document.createElement('span');s.className='preview-chord';s.textContent=c.chord;s.style.left=`${c.position}ch`;row.appendChild(s)});box.appendChild(row)})}
+function saveSong(){meta();let s=data[selected];if(!s.title.trim()){alert('Please enter a song title.');return}s.id=s.id||s.title.toLowerCase().trim().replace(/[^a-z0-9]+/g,'-');alert('Saved in dashboard. Download songs.js to publish changes.')}
+function newSong(){data.push({id:'new-song-'+Date.now(),title:'New Song',artist:'',language:'Urdu',category:'Worship',key:'G',rightsStatus:'demo',sourceUrl:'',lyrics:[{text:'',chords:[]}]});selected=data.length-1;renderList();renderEditor()}
+function deleteSong(){if(!confirm('Delete this song?'))return;data.splice(selected,1);selected=Math.min(selected,data.length-1);renderList();renderEditor()}
+function downloadSongs(){if(selected>=0)meta();download('songs.js','const songs = '+JSON.stringify(data,null,2)+';\n','text/javascript')}
+function downloadBackup(){download('masihi-geet-backup.json',JSON.stringify(data,null,2),'application/json')}
+function download(name,content,type){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+renderList();renderEditor();
+</script>
 </body>
 </html>
