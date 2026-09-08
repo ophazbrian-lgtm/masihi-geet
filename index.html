@@ -526,17 +526,27 @@ function transpose(direction) {
 
 function transposeChord(chord) {
 
-  const index = notes.indexOf(chord);
+  // Find the root note at the beginning of the chord
+  const match = chord.match(/^(C#|D#|F#|G#|A#|C|D|E|F|G|A|B)(.*)$/);
+
+  // If we don't recognize the chord, leave it unchanged
+  if (!match) return chord;
+
+  const root = match[1];
+  const suffix = match[2];
+
+  const index = notes.indexOf(root);
 
   if (index === -1) return chord;
 
   let newIndex =
     (index + transposeAmount) % 12;
 
-  if (newIndex < 0) newIndex += 12;
+  if (newIndex < 0) {
+    newIndex += 12;
+  }
 
-  return notes[newIndex];
-
+  return notes[newIndex] + suffix;
 }
 
 function renderLyrics() {
