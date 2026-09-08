@@ -36,9 +36,10 @@
     .controls button:hover { opacity: 0.85; }
     .key-display { background: #eee; padding: 10px 15px; border-radius: 7px; font-weight: bold; min-height: 42px; display: flex; align-items: center; }
     .lyrics { font-size: 20px; line-height: 1.75; }
-    .lyric-line { margin-bottom: 20px; }
-    .lyric-line.section { margin-top: 32px; margin-bottom: 12px; font-weight: bold; font-size: 15px; text-transform: uppercase; letter-spacing: 0.08em; color: #666; }
-    .chord { display: inline-block; color: #c62828; font-weight: bold; margin-right: 10px; min-width: 28px; }
+    .lyric-line { margin-bottom: 24px; font-family: "Courier New", Courier, monospace; white-space: pre; overflow-x: auto; padding-top: 22px; }
+    .lyric-line.section { margin-top: 32px; margin-bottom: 12px; font-weight: bold; font-size: 15px; text-transform: uppercase; letter-spacing: 0.08em; color: #666; font-family: Arial, Helvetica, sans-serif; white-space: normal; padding-top: 0; }
+    .chord-position-area { position: relative; height: 0; overflow: visible; }
+    .chord { position: absolute; top: -22px; color: #c62828; font-weight: bold; white-space: nowrap; }
     .empty-message { text-align: center; padding: 50px 20px; color: #777; }
     footer { background: #111; color: #aaa; text-align: center; padding: 30px 20px; margin-top: 50px; font-size: 14px; }
     @media (max-width: 600px) {
@@ -51,7 +52,8 @@
       .controls button { min-width: 46px; }
       .key-display { flex: 1; justify-content: center; }
       .lyrics { font-size: 18px; line-height: 1.8; }
-      .lyric-line { margin-bottom: 18px; }
+      .lyric-line { margin-bottom: 22px; padding-top: 20px; }
+      .chord { top: -20px; }
     }
   </style>
 </head>
@@ -148,15 +150,44 @@
         lyricsContainer.innerHTML = `<div class="empty-message">Lyrics coming soon.</div>`;
         return;
       }
+
       currentSong.lyrics.forEach(line => {
         const lyricLine = document.createElement("div");
-        const text = typeof line === "string" ? line : (line.text || "");
-        const chord = typeof line === "string" ? "" : transposeChord(line.chord);
         lyricLine.className = "lyric-line";
-        if (!text.trim() && !chord) lyricLine.innerHTML = "&nbsp;";
-        else lyricLine.innerHTML = `<span class="chord">${chord}</span><span>${text}</span>`;
+
+        const text = typeof line === "string" ? line : (line.text || "");
+        let chordPositions = [];
+
+        if (typeof line !== "string") {
+          if (Array.isArray(line.chords)) {
+            chordPositions = line.chords;
+          } else if (line.chord) {
+            chordPositions = [{ chord: line.chord, position: 0 }];
+          }
+        }
+
+        if (!text.trim() && chordPositions.length === 0) {
+          lyricLine.innerHTML = "&nbsp;";
+          lyricsContainer.appendChild(lyricLine);
+          return;
+        }
+
+        const chordArea = document.createElement("div");
+        chordArea.className = "chord-position-area";
+
+        chordPositions.forEach(item => {
+          const chord = document.createElement("span");
+          chord.className = "chord";
+          chord.textContent = transposeChord(item.chord || "");
+          chord.style.left = `${Math.max(0, Number(item.position) || 0)}ch`;
+          chordArea.appendChild(chord);
+        });
+
+        lyricLine.appendChild(chordArea);
+        lyricLine.appendChild(document.createTextNode(text));
         lyricsContainer.appendChild(lyricLine);
       });
+
       updateKeyDisplay();
     }
 
