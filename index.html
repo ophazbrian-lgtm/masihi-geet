@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Masihi Geet — Christian Songs & Chords</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f5;
+      color: #171717;
+    }
+
+    header {
+      padding: 24px 6%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .logo span {
+      color: #777;
+      font-weight: 400;
+    }
+
+    .hero {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 90px 20px 70px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #777;
+      margin-bottom: 18px;
+      font-weight: 700;
+    }
+
+    h1 {
+      font-size: clamp(42px, 7vw, 76px);
+      line-height: 0.95;
+      letter-spacing: -4px;
+      margin-bottom: 24px;
+    }
+
+    .hero p {
+      max-width: 580px;
+      margin: 0 auto 35px;
+      color: #666;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    .search-box {
+      max-width: 650px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 20px 24px;
+      border: 1px solid #ddd;
+      border-radius: 14px;
+      font-size: 17px;
+      outline: none;
+      background: white;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+    }
+
+    .search-box input:focus {
+      border-color: #999;
+    }
+
+    .section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 30px 20px 80px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .section-header h2 {
+      font-size: 28px;
+      letter-spacing: -1px;
+    }
+
+    .song-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 14px;
+    }
+
+    .song-card {
+      background: white;
+      border: 1px solid #e7e7e7;
+      border-radius: 14px;
+      padding: 22px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .song-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.07);
+    }
+
+    .song-card h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .song-card p {
+      color: #777;
+      font-size: 14px;
+    }
+
+    .tag {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 6px 9px;
+      border-radius: 20px;
+      background: #f0f0ee;
+      font-size: 11px;
+      color: #666;
+    }
+
+    #song-view {
+      display: none;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 50px 20px 100px;
+    }
+
+    .back-button {
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: #666;
+      margin-bottom: 35px;
+      font-size: 14px;
+    }
+
+    .song-title {
+      font-size: clamp(36px, 6vw, 58px);
+      line-height: 1;
+      letter-spacing: -3px;
+      margin-bottom: 10px;
+    }
+
+    .artist {
+      color: #777;
+      margin-bottom: 30px;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 35px;
+    }
+
+    .controls button {
+      border: 1px solid #ddd;
+      background: white;
+      border-radius: 8px;
+      padding: 10px 15px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .key {
+      padding: 10px 18px;
+      background: #171717;
+      color: white;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    .lyrics {
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      border: 1px solid #e7e7e7;
+    }
+
+    .line {
+      margin-bottom: 22px;
+      line-height: 1.7;
+      font-size: 18px;
+    }
+
+    .chord {
+      color: #555;
+      font-weight: 800;
+      display: block;
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: #999;
+      border-top: 1px solid #e5e5e5;
+      font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        padding: 20px;
+      }
+
+      .hero {
+        padding: 65px 20px 50px;
+      }
+
+      h1 {
+        letter-spacing: -2px;
+      }
+
+      .lyrics {
+        padding: 22px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">
+    Masihi <span>Geet</span>
+  </div>
+</header>
+
+<main id="home">
+
+  <section class="hero">
+
+    <div class="eyebrow">
+      Pakistani Christian Songs
+    </div>
+
+    <h1>
+      Find the song.<br>
+      Sing the song.
+    </h1>
+
+    <p>
+      A free collection of Christian songs, lyrics and chords
+      for worshippers, musicians and churches.
+    </p>
+
+    <div class="search-box">
+      <input
+        type="text"
+        id="search"
+        placeholder="Search a song or artist..."
+        onkeyup="searchSongs()"
+      >
+    </div>
+
+  </section>
+
+  <section class="section">
+
+    <div class="section-header">
+      <h2>Popular songs</h2>
+    </div>
+
+    <div class="song-grid" id="song-grid"></div>
+
+  </section>
+
+</main>
+
+<section id="song-view">
+
+  <button class="back-button" onclick="showHome()">
+    ← Back to songs
+  </button>
+
+  <h1 class="song-title" id="view-title"></h1>
+
+  <p class="artist" id="view-artist"></p>
+
+  <div class="controls">
+
+    <button onclick="transpose(-1)">
+      −
+    </button>
+
+    <div class="key" id="current-key">
+      G
+    </div>
+
+    <button onclick="transpose(1)">
+      +
+    </button>
+
+    <span style="color:#777;font-size:13px;">
+      Transpose
+    </span>
+
+  </div>
+
+  <div class="lyrics" id="lyrics"></div>
+
+</section>
+
+<footer>
+  © 2026 Masihi Geet · Free Christian Songs & Chords
+</footer>
+
+
+<script>
+
+const songs = [
+
+  {
+    title: "Yesu Mere Naal Naal Rehnda Hai",
+    artist: "Agape Sisters",
+    language: "Punjabi",
+    key: "G",
+    lyrics: [
+      ["G", "Yesu mere naal naal"],
+      ["Em", "rehnda hai"],
+      ["C", "Har vele mere"],
+      ["D", "naal rehnda hai"],
+      ["G", "Yesu mere naal naal"],
+      ["Em", "rehnda hai"],
+      ["C", "Har vele mere"],
+      ["D", "naal rehnda hai"]
+    ]
+  },
+
+  {
+    title: "Eman",
+    artist: "Daim Gill",
+    language: "Punjabi",
+    key: "G",
+    lyrics: [
+      ["G", "Eman mera Yesu te"],
+      ["Em", "Eman mera Yesu te"],
+      ["C", "Oh mera Rab hai"],
+      ["D", "Oh mera Khuda hai"]
+    ]
+  },
+
+  {
+    title: "Yasu Masih Ki Jai",
+    artist: "Daim Gill",
+    language: "Punjabi",
+    key: "G",
+    lyrics: [
+      ["G", "Yasu Masih ki jai"],
+      ["Em", "Yasu Masih ki jai"],
+      ["C", "Sari duniya gaave"],
+      ["D", "Yasu Masih ki jai"]
+    ]
+  },
+
+  {
+    title: "Hazuri",
+    artist: "Faraz Nayyer",
+    language: "Urdu",
+    key: "G",
+    lyrics: [
+      ["G", "Teri hazuri mein"],
+      ["Em", "aata hoon Khudaya"],
+      ["C", "Tere qadmon mein"],
+      ["D", "jhukta hoon Khudaya"]
+    ]
+  },
+
+  {
+    title: "Yeshu Tera Naam",
+    artist: "Agape Sisters",
+    language: "Punjabi",
+    key: "G",
+    lyrics: [
+      ["G", "Yeshu tera naam"],
+      ["Em", "sab ton pyara"],
+      ["C", "Yeshu tera naam"],
+      ["D", "sab ton nyara"]
+    ]
+  },
+
+  {
+    title: "Jakray Azad Hounday Ny",
+    artist: "Tehmina Tariq",
+    language: "Punjabi",
+    key: "G",
+    lyrics: [
+      ["G", "Jakray azad hounday ny"],
+      ["Em", "Yesu de naam de naal"],
+      ["C", "Dil nu khushi mildi"],
+      ["D", "Yesu de naam de naal"]
+    ]
+  }
+
+];
+
+let currentSong = null;
+let transposeAmount = 0;
+
+const notes = [
+  "C","C#","D","D#","E","F",
+  "F#","G","G#","A","A#","B"
+];
+
+function renderSongs(list = songs) {
+
+  const grid = document.getElementById("song-grid");
+
+  grid.innerHTML = "";
+
+  if (list.length === 0) {
+
+    grid.innerHTML =
+      "<p style='color:#777;'>No songs found.</p>";
+
+    return;
+  }
+
+  list.forEach((song, index) => {
+
+    const card = document.createElement("div");
+
+    card.className = "song-card";
+
+    card.innerHTML = `
+      <h3>${song.title}</h3>
+      <p>${song.artist}</p>
+      <span class="tag">${song.language}</span>
+    `;
+
+    card.onclick = () => openSong(index);
+
+    grid.appendChild(card);
+
+  });
+
+}
+
+function searchSongs() {
+
+  const query =
+    document.getElementById("search")
+    .value
+    .toLowerCase();
+
+  const filtered = songs.filter(song =>
+    song.title.toLowerCase().includes(query) ||
+    song.artist.toLowerCase().includes(query)
+  );
+
+  renderSongs(filtered);
+
+}
+
+function openSong(index) {
+
+  currentSong = songs[index];
+
+  transposeAmount = 0;
+
+  document.getElementById("home").style.display = "none";
+
+  document.getElementById("song-view").style.display = "block";
+
+  document.getElementById("view-title").innerText =
+    currentSong.title;
+
+  document.getElementById("view-artist").innerText =
+    currentSong.artist + " · " + currentSong.language;
+
+  renderLyrics();
+
+  window.scrollTo(0,0);
+
+}
+
+function showHome() {
+
+  document.getElementById("song-view").style.display = "none";
+
+  document.getElementById("home").style.display = "block";
+
+  window.scrollTo(0,0);
+
+}
+
+function transpose(direction) {
+
+  transposeAmount += direction;
+
+  renderLyrics();
+
+}
+
+function transposeChord(chord) {
+
+  const index = notes.indexOf(chord);
+
+  if (index === -1) return chord;
+
+  let newIndex =
+    (index + transposeAmount) % 12;
+
+  if (newIndex < 0) newIndex += 12;
+
+  return notes[newIndex];
+
+}
+
+function renderLyrics() {
+
+  const container =
+    document.getElementById("lyrics");
+
+  container.innerHTML = "";
+
+  currentSong.lyrics.forEach(line => {
+
+    const chord =
+      transposeChord(line[0]);
+
+    const div =
+      document.createElement("div");
+
+    div.className = "line";
+
+    div.innerHTML = `
+      <span class="chord">${chord}</span>
+      ${line[1]}
+    `;
+
+    container.appendChild(div);
+
+  });
+
+  document.getElementById("current-key").innerText =
+    transposeChord(currentSong.key);
+
+}
+
+renderSongs();
+
+</script>
+
+</body>
+</html>
