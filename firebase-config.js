@@ -8,4 +8,5 @@ window.MG_FIREBASE_CONFIG = {
 // Firebase Authentication > Users > your Google account > User UID.
 // Leave this placeholder until your first Google sign-in creates your Firebase user.
 // No account receives dashboard access while this is a placeholder.
-window.MG_ADMIN_UID = 'L68wvCIRkaeIBiFodG2HP6EySJB3';
+window.MG_OWNER_UID = 'L68wvCIRkaeIBiFodG2HP6EySJB3';
+window.MG_ADMIN_COLLECTION = 'masihiGeetAdmins';
