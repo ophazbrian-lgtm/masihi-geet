@@ -1,9 +1,9 @@
 // Public Firebase web configuration — see AUTH_SETUP.md. Never put private keys here.
 window.MG_FIREBASE_CONFIG = {
-  apiKey: 'REPLACE_WITH_FIREBASE_API_KEY',
-  authDomain: 'REPLACE_WITH_PROJECT_ID.firebaseapp.com',
-  projectId: 'REPLACE_WITH_PROJECT_ID',
-  appId: 'REPLACE_WITH_FIREBASE_APP_ID'
+  apiKey: 'AIzaSyDWgHLWtQu1KHgc-zmj8Nm-sXYGyDXsOdE',
+  authDomain: 'masihi-geet-574b1.firebaseapp.com',
+  projectId: 'masihi-geet-574b1',
+  appId: '1:823244359502:web:d4762fdd1ce6b33c80001f'
 };
 // Firebase Authentication > Users > your Google account > User UID.
 // Leave this placeholder until your first Google sign-in creates your Firebase user.
