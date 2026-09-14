@@ -1,8 +1,8 @@
 // Google identity is verified by Firebase. This static UI gate is not a backend
 // authorization boundary. See AUTH_SETUP.md before adding any remote writes.
 (() => {
-  let sdk, auth, provider, version = 0, expiryTimer;
-  let state = { ready: false, canSignIn: false, signingOut: false, admin: false, user: null, error: '' };
+  let sdk, auth, provider, db, version = 0, expiryTimer;
+  let state = { ready: false, canSignIn: false, signingOut: false, owner: false, admin: false, user: null, error: '' };
   let finishReady;
   const ready = new Promise(resolve => { finishReady = resolve; });
   const setupError = 'Google sign-in is not configured yet. Follow AUTH_SETUP.md in the repository.';
@@ -35,12 +35,20 @@
       const token = user ? await user.getIdTokenResult() : null;
       if (request !== version) return;
       const expiresIn = token ? Date.parse(token.expirationTime) - Date.now() : 0;
-      const admin = Boolean(!state.signingOut && user && configured(window.MG_ADMIN_UID) &&
-        user.uid === window.MG_ADMIN_UID && user.emailVerified &&
-        token.claims.email_verified === true &&
-        token.signInProvider === 'google.com' && expiresIn > 0);
-      publish({ ready: true, admin, user, error: user && !admin ?
-        'This Google account is not authorized for the dashboard. Use the site owner’s account. If you are setting up the site, copy your User UID from Firebase into firebase-config.js.' : '' });
+      const signedInWithGoogle = Boolean(!state.signingOut && user && user.emailVerified &&
+        token.claims.email_verified === true && token.signInProvider === 'google.com' && expiresIn > 0);
+      const owner = Boolean(signedInWithGoogle && configured(window.MG_OWNER_UID) && user.uid === window.MG_OWNER_UID);
+      let assigned = false;
+      if (signedInWithGoogle && !owner && db && user.email) {
+        try {
+          const role = await sdk.getDoc(sdk.doc(db, window.MG_ADMIN_COLLECTION || 'masihiGeetAdmins', user.email.toLowerCase()));
+          assigned = role.exists() && role.data().active === true;
+        } catch (_) { assigned = false; }
+      }
+      if (request !== version) return;
+      const admin = owner || assigned;
+      publish({ ready: true, owner, admin, user, error: user && !admin ?
+        'This Google account is not authorized for the dashboard. Ask the site owner to add your Gmail address as an admin.' : '' });
       if (admin) expiryTimer = setTimeout(() => {
         publish({ admin: false, error: 'Your session expired. Please sign in again.' });
       }, Math.min(expiresIn, 2147483647));
@@ -63,6 +71,7 @@
     } catch (_) { return 'admin.html'; }
   };
   window.mgIsAdmin = () => state.admin;
+  window.mgIsOwner = () => state.owner;
   window.mgAuthState = () => ({ ...state });
   window.mgAuthReady = ready;
   window.mgSignIn = async () => {
@@ -99,7 +108,9 @@
       error: 'Google sign-in is taking too long. Check your connection and reload.' }), 15000);
     try {
       sdk = await import('./firebase-client.js');
-      auth = sdk.getAuth(sdk.initializeApp(config));
+      const app = sdk.initializeApp(config);
+      auth = sdk.getAuth(app);
+      db = sdk.getFirestore(app);
       await sdk.setPersistence(auth, sdk.browserLocalPersistence);
       provider = new sdk.GoogleAuthProvider();
       provider.setCustomParameters({ prompt: 'select_account' });
