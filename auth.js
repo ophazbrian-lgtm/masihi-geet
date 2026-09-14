@@ -83,6 +83,23 @@
       return state.admin;
     } catch (error) { throw new Error(errorMessage(error)); }
   };
+  function normalEmail(value) { return String(value || '').trim().toLowerCase(); }
+  window.mgListAdmins = async () => {
+    if (!state.owner || !db) throw new Error('Only the site owner can manage admins.');
+    const result = await sdk.getDocs(sdk.collection(db, window.MG_ADMIN_COLLECTION || 'masihiGeetAdmins'));
+    return result.docs.map(item => ({ email: item.id, ...item.data() })).sort((a,b) => a.email.localeCompare(b.email));
+  };
+  window.mgGrantAdmin = async email => {
+    email = normalEmail(email);
+    if (!state.owner || !db) throw new Error('Only the site owner can manage admins.');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('Enter a valid Gmail address.');
+    await sdk.setDoc(sdk.doc(db, window.MG_ADMIN_COLLECTION || 'masihiGeetAdmins', email),
+      { active: true, email, addedAt: sdk.serverTimestamp(), addedBy: state.user.uid });
+  };
+  window.mgRevokeAdmin = async email => {
+    if (!state.owner || !db) throw new Error('Only the site owner can manage admins.');
+    await sdk.deleteDoc(sdk.doc(db, window.MG_ADMIN_COLLECTION || 'masihiGeetAdmins', normalEmail(email)));
+  };
   window.mgSignOut = async () => {
     ++version;
     clearTimeout(expiryTimer);
