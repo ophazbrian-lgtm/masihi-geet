@@ -43,6 +43,7 @@
 <main id="homePage"><h2 class="section-title">Songs</h2><div id="songsGrid" class="songs-grid"></div></main>
 <section id="songView" class="song-view"><div class="song-view-inner"><button class="back-button" onclick="showHome()">← Back to songs</button><div class="song-header"><h2 id="songTitle"></h2><p id="songArtist"></p><a id="editCurrent" class="edit-song" data-admin-only href="#">✎ Edit this song</a></div><div class="controls"><button onclick="transpose(-1)">−</button><div class="key-display">Key: <span id="currentKey"></span></div><button onclick="transpose(1)">+</button><button onclick="resetTranspose()">Reset</button></div><div id="lyrics" class="lyrics"></div></div></section>
 <footer><p>Masihi Geet</p><p>Pakistani Christian Songs & Worship Resources</p></footer>
+<script src="firebase-config.js"></script>
 <script src="auth.js"></script>
 <script src="songs.js"></script>
 <script>
@@ -58,7 +59,9 @@ function transposeChord(chord){if(!chord)return chord;const m=chord.match(/^(C#|
 function transpose(n){transposeAmount+=n;renderLyrics()}function resetTranspose(){transposeAmount=0;renderLyrics()}
 function updateKeyDisplay(){if(!currentSong)return;const i=notes.indexOf(currentSong.key);document.getElementById('currentKey').textContent=i<0?currentSong.key:notes[(i+transposeAmount+120)%12]}
 function showHome(){currentSong=null;transposeAmount=0;document.getElementById('songView').style.display='none';document.getElementById('homePage').style.display='block';document.getElementById('homeHero').style.display='block';document.getElementById('searchInput').value='';renderSongs(songs);window.scrollTo({top:0,behavior:'smooth'})}
+window.addEventListener('mg-auth-change', renderAdminUI);
 renderSongs(songs);renderAdminUI();
 </script>
 </body>
 </html>
+
