@@ -18,7 +18,7 @@
     loading = true;
     const editor = document.createElement('script');
     editor.src = 'admin-editor.js';
-    editor.onload = () => { loaded = true; status.hidden = true; guard(); };
+    editor.onload = () => { const manager = document.createElement('script'); manager.src = 'admin-management.js'; manager.onload = () => { loaded = true; status.hidden = true; guard(); }; manager.onerror = () => { loaded = true; status.hidden = true; guard(); }; document.body.appendChild(manager); };
     editor.onerror = () => {
       content.hidden = true;
       content.inert = true;
