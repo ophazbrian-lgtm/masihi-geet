@@ -26,7 +26,7 @@
       'auth/invalid-api-key': setupError,
       'auth/user-disabled': 'This account has been disabled in Firebase.'
     };
-    return messages[error?.code] || 'Google sign-in is unavailable. Reload and try again, or check AUTH_SETUP.md.';
+    return messages[error?.code] || `Google sign-in is unavailable (${error?.code || error?.message || 'unknown Firebase error'}). Reload and try again.`;
   }
   async function acceptUser(user) {
     const request = ++version;
